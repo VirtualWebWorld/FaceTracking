@@ -1,0 +1,31 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  // "extends": "eslint:recommended",
+  "extends": "standard",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {
+    "semi": ["error", "never", {"beforeStatementContinuationChars": "never"}],
+    "semi-spacing": ["error", {"after": true, "before": false}],
+    "semi-style": ["error", "first"],
+    "no-extra-semi": "error",
+    "no-unexpected-multiline": "error",
+    "no-unreachable": "error",
+    "quotes": ["error", "single"],
+    "indent": ["error", 2],
+    "no-var": "error",
+    "arrow-spacing": "error",
+    "eqeqeq": "error",
+    "space-infix-ops": "error",
+    "no-multiple-empty-lines": ["error" , {"max": 1}],
+    "no-trailing-spaces": "error",
+    "dot-notation": "error",
+    "no-loop-func": "error",
+    "arrow-parens": "error"
+  }
+}
