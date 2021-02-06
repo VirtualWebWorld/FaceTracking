@@ -1,9 +1,10 @@
 const videoWidth = 900
 const videoHeight = 600
 
-export const camera = async () => {
+const camera = async () => {
   const video = await setupCamera()
   video.play()
+  return video
 }
 
 async function setupCamera () {
@@ -25,3 +26,5 @@ async function setupCamera () {
     }
   })
 }
+
+export default camera

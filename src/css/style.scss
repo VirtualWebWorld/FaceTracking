@@ -4,8 +4,5 @@ body {
 }
 
 .video {
-	transform: scaleX(-1);
-	visibility: hidden;
-	width: auto;
-	height: auto;
+	display: none;
 }
