@@ -1,0 +1,11 @@
+body {
+	margin: 0;
+	overflow: hidden;
+}
+
+.video {
+	transform: scaleX(-1);
+	visibility: hidden;
+	width: auto;
+	height: auto;
+}
