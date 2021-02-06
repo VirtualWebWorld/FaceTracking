@@ -1,8 +1,19 @@
 body {
-	margin: 0;
-	overflow: hidden;
+  margin: 0;
+  overflow: hidden;
 }
 
 .video {
-	display: none;
+  transform: scale(-1, 1);
+  // display: none;
+}
+
+.pixi {
+  &>canvas {
+    transform: scale(-1, 1);
+  }
+}
+
+.unvisible {
+  display: none;
 }

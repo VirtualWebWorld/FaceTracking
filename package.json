@@ -25,7 +25,8 @@
     "@tensorflow/tfjs-backend-wasm": "^3.0.0",
     "@tensorflow/tfjs-converter": "^3.0.0",
     "@tensorflow/tfjs-core": "^3.0.0",
-    "pixi.js": "^5.3.7"
+    "pixi.js": "^5.3.7",
+    "three": "^0.125.2"
   },
   "browserslist": [
     "since 2017-06"

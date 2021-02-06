@@ -6,8 +6,8 @@ export default class CameraCanvas {
     this.height = window.innerHeight
     this.stage = new PIXI.Container()
     this.renderer = PIXI.autoDetectRenderer({
-      width: 900,
-      height: 600,
+      width: 300,
+      height: 200,
       resolution: 1,
       antialias: true
       // transparent: true,
@@ -31,7 +31,6 @@ export default class CameraCanvas {
   }
 
   animate () {
-    console.log(this.stage)
     this.renderer.render(this.stage)
   }
 }

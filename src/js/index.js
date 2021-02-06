@@ -9,10 +9,11 @@ import {
 } from './triangulation'
 import Camera from './camera'
 import CameraCanvas from './canvas'
+import FaceMesh from './facemesh'
 
 const g = []
 
-let model, video, cc
+let model, video, cc, fm
 (async function main () {
   video = await Camera()
 
@@ -21,6 +22,8 @@ let model, video, cc
   })
 
   cc = new CameraCanvas(video)
+  fm = new FaceMesh()
+  await fm.setUp(model)
 
   renderPrediction()
 })()
@@ -36,11 +39,11 @@ async function renderPrediction () {
       deleteGraphics()
       for (let i = 0; i < TRIANGULATION.length / 3; i++) {
         const points = [
-          TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1],
-          TRIANGULATION[i * 3 + 2]
+          TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1], TRIANGULATION[i * 3 + 2]
         ].map((index) => keypoints[index])
         drawPath(points, i)
       }
+      fm.animate(keypoints)
     })
   }
   cc.animate()
