@@ -1,5 +1,5 @@
-const videoWidth = 300
-const videoHeight = 200
+const videoWidth = 500
+const videoHeight = 500
 
 const camera = async () => {
   const video = await setupCamera()

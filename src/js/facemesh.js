@@ -9,10 +9,13 @@ export default class FaceMesh {
     this.scene = new THREE.Scene()
     this.canvas = document.getElementById('threejs_canvas')
     this.render = new THREE.WebGLRenderer({
-      alpha: true
+      // alpha: true,
+      antialias: true
     })
     this.render.setPixelRatio(window.devicePixelRatio)
-    this.render.setSize(300, 200)
+    this.width = 500
+    this.height = 500
+    this.render.setSize(this.width, this.height)
     this.render.setClearColor(0x000000, 0)
     this.canvas.appendChild(this.render.domElement)
 
@@ -38,12 +41,12 @@ export default class FaceMesh {
   settingCamera () {
     const fov = 1
     const fovRad = (fov / 2) * (Math.PI / 180)
-    const dist = (200 / 2) / Math.tan(fovRad)
+    const dist = (this.height / 2) / Math.tan(fovRad)
 
-    const camera = new THREE.PerspectiveCamera(fov, 300 / 200, 1, dist * 2)
+    const camera = new THREE.PerspectiveCamera(fov, this.width / this.height, 1, dist * 2)
     camera.position.z = dist
-    camera.position.x = 300 / 2 * -1
-    camera.position.y = 200 / 2 * -1
+    camera.position.x = this.width / 2 * -1
+    camera.position.y = this.height / 2 * -1
 
     return camera
   }
@@ -87,8 +90,7 @@ export default class FaceMesh {
       Array.prototype.concat.apply([], TRIANGULATION.map((index) => keypoints[index])))
 
     const uv = new Float32Array(
-      Array.prototype.concat.apply([],
-        TRIANGULATION.map((index) => [keypoints[index][0] / this.modelWidth, keypoints[index][1] / this.modelHeight])))
+      Array.prototype.concat.apply([], TRIANGULATION.map((index) => [keypoints[index][0] / this.modelWidth, keypoints[index][1] / this.modelHeight])))
 
     this.mesh.geometry.setAttribute('position', new THREE.BufferAttribute(pos, 3))
     this.mesh.geometry.setAttribute('uv', new THREE.BufferAttribute(uv, 2))

@@ -20,12 +20,15 @@
     "sass": "^1.32.6"
   },
   "dependencies": {
+    "@pixiv/three-vrm": "^0.6.0",
     "@tensorflow-models/face-landmarks-detection": "0.0.2",
     "@tensorflow/tfjs": "^3.0.0",
     "@tensorflow/tfjs-backend-wasm": "^3.0.0",
     "@tensorflow/tfjs-converter": "^3.0.0",
     "@tensorflow/tfjs-core": "^3.0.0",
+    "@types/stats.js": "^0.17.0",
     "pixi.js": "^5.3.7",
+    "stats.js": "^0.17.0",
     "three": "^0.125.2"
   },
   "browserslist": [

@@ -4,16 +4,19 @@ import '../css/style.scss'
 import '@tensorflow/tfjs'
 import '@tensorflow/tfjs-backend-wasm'
 import * as FLD from '@tensorflow-models/face-landmarks-detection'
+import Stats from 'stats.js'
+
 import {
   TRIANGULATION
 } from './triangulation'
 import Camera from './camera'
 import CameraCanvas from './canvas'
 import FaceMesh from './facemesh'
+import FaceVRM from './facevrm'
 
 const g = []
 
-let model, video, cc, fm
+let model, video, cc, fm, stats, fv
 (async function main () {
   video = await Camera()
 
@@ -21,14 +24,20 @@ let model, video, cc, fm
     maxFaces: 1
   })
 
+  stats = new Stats()
+  stats.showPanel(0)
+  document.body.appendChild(stats.dom)
+
   cc = new CameraCanvas(video)
   fm = new FaceMesh()
+  fv = new FaceVRM()
   await fm.setUp(model)
 
   renderPrediction()
 })()
 
 async function renderPrediction () {
+  stats.begin()
   const predictions = await model.estimateFaces({
     input: video
   })
@@ -44,9 +53,11 @@ async function renderPrediction () {
         drawPath(points, i)
       }
       fm.animate(keypoints)
+      fv.animate(prediction)
     })
   }
   cc.animate()
+  stats.end()
   requestAnimationFrame(renderPrediction)
 }
 
