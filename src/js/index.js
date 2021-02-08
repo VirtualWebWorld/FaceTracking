@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import '../css/style.scss'
 
 import '@tensorflow/tfjs'
-import '@tensorflow/tfjs-backend-webgl'
+import '@tensorflow/tfjs-backend-wasm'
 import * as FLD from '@tensorflow-models/face-landmarks-detection'
 import Stats from 'stats.js'
 
