@@ -36,6 +36,9 @@ export default class FaceVRM {
     this.light.position.set(1.0, 1.0, 1.0).normalize()
     this.scene.add(this.light)
 
+    this.clock = new THREE.Clock()
+    this.clock.start()
+
     this.currentVRM = undefined
     this.modelLoadFlag = false
     this.modelLoad()
@@ -118,12 +121,38 @@ export default class FaceVRM {
     this.render.render(this.scene, this.camera)
   }
 
+  faceMove (an) {
+    document.getElementById('ulipsXPosition').innerHTML = an.lipsUpperInner[6][0]
+    document.getElementById('ulipsYPosition').innerHTML = an.lipsUpperInner[6][1]
+    document.getElementById('llipsXPosition').innerHTML = an.lipsLowerInner[6][0]
+    document.getElementById('llipsYPosition').innerHTML = an.lipsLowerInner[6][1]
+    document.getElementById('ulEyeXPosition').innerHTML = an.leftEyeUpper0[3][0]
+    document.getElementById('ulEyeYPosition').innerHTML = an.leftEyeUpper0[3][1]
+    document.getElementById('llEyeXPosition').innerHTML = an.leftEyeLower0[6][0]
+    document.getElementById('llEyeYPosition').innerHTML = an.leftEyeLower0[6][1]
+    document.getElementById('urEyeXPosition').innerHTML = an.rightEyeUpper0[3][0]
+    document.getElementById('urEyeYPosition').innerHTML = an.rightEyeUpper0[3][1]
+    document.getElementById('lrEyeXPosition').innerHTML = an.rightEyeLower0[6][0]
+    document.getElementById('lrEyeYPosition').innerHTML = an.rightEyeLower0[6][1]
+    let lipRatio = ((an.lipsLowerInner[6][1] - an.lipsUpperInner[6][1]) - 7) / 20
+    lipRatio = (lipRatio < 0) ? 0 : (lipRatio > 1 ? 1 : lipRatio)
+    let lEyeRatio = 1 - ((an.leftEyeLower0[6][1] - an.leftEyeUpper0[3][1]) - 2) / 5
+    lEyeRatio = (lEyeRatio < 0) ? 0 : (lEyeRatio > 1 ? 1 : lEyeRatio)
+    let rEyeRatio = 1 - ((an.rightEyeLower0[6][1] - an.rightEyeUpper0[3][1]) - 2) / 5
+    rEyeRatio = (rEyeRatio < 0) ? 0 : (rEyeRatio > 1 ? 1 : rEyeRatio)
+    this.currentVRM.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.A, lipRatio)
+    this.currentVRM.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.BlinkL, lEyeRatio)
+    this.currentVRM.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.BlinkR, rEyeRatio)
+  }
+
   animate (prediction) {
     const an = prediction.annotations
     const rightEyeLower1 = an.rightEyeLower1[8]
     const leftEyeLower1 = an.leftEyeLower1[8]
     if (this.modelLoadFlag) {
       this.headPoseEstimation(an.silhouette, rightEyeLower1, leftEyeLower1)
+      this.faceMove(an)
+      this.currentVRM.update(this.clock.getDelta())
     }
   }
 }

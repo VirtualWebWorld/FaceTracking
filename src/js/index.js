@@ -2,7 +2,7 @@ import * as PIXI from 'pixi.js'
 import '../css/style.scss'
 
 import '@tensorflow/tfjs'
-import '@tensorflow/tfjs-backend-wasm'
+import '@tensorflow/tfjs-backend-webgl'
 import * as FLD from '@tensorflow-models/face-landmarks-detection'
 import Stats from 'stats.js'
 
@@ -10,13 +10,19 @@ import {
   TRIANGULATION
 } from './triangulation'
 import Camera from './camera'
-import CameraCanvas from './canvas'
-import FaceMesh from './facemesh'
+import CameraCanvas from './cameracanvas'
+// import FaceMesh from './facemesh'
 import FaceVRM from './facevrm'
 
 const g = []
+const ccArr = []
 
-let model, video, cc, fm, stats, fv
+let model,
+  video,
+  cc,
+  stats,
+  fv
+  // fm
 (async function main () {
   video = await Camera()
 
@@ -29,9 +35,9 @@ let model, video, cc, fm, stats, fv
   document.body.appendChild(stats.dom)
 
   cc = new CameraCanvas(video)
-  fm = new FaceMesh()
+  // fm = new FaceMesh()
   fv = new FaceVRM()
-  await fm.setUp(model)
+  // await fm.setUp(model)
 
   renderPrediction()
 })()
@@ -44,15 +50,23 @@ async function renderPrediction () {
 
   if (predictions.length > 0) {
     predictions.forEach((prediction) => {
-      const keypoints = prediction.scaledMesh
       deleteGraphics()
+      const keypoints = prediction.scaledMesh
+      const an = prediction.annotations
       for (let i = 0; i < TRIANGULATION.length / 3; i++) {
         const points = [
           TRIANGULATION[i * 3], TRIANGULATION[i * 3 + 1], TRIANGULATION[i * 3 + 2]
         ].map((index) => keypoints[index])
         drawPath(points, i)
       }
-      fm.animate(keypoints)
+
+      // ccArr.push(...createPoint(an.lipsUpperInner, 0xff0000))// 11
+      // ccArr.push(...createPoint(an.lipsLowerInner, 0x00ff00))// 11
+      // ccArr.push(...createPoint(an.leftEyeUpper0, 0xff0000))// 7
+      // ccArr.push(...createPoint(an.leftEyeLower0, 0x00ff00))// 9
+      // ccArr.push(...createPoint(an.rightEyeUpper0, 0xff0000))// 7
+      // ccArr.push(...createPoint(an.rightEyeLower0, 0x00ff00))// 9
+      // fm.animate(keypoints)
       fv.animate(prediction)
     })
   }
@@ -61,8 +75,22 @@ async function renderPrediction () {
   requestAnimationFrame(renderPrediction)
 }
 
+function createPoint (arr, color) {
+  const point = [...arr]
+  const rArr = []
+  for (let i = 0; i < point.length; i++) {
+    const x = point[i][0]
+    const y = point[i][1]
+    rArr.push(cc.createCircle(x, y, 3, color))
+  }
+  return rArr
+}
+
 function deleteGraphics () {
   g.forEach((e) => {
+    cc.deleteStage(e)
+  })
+  ccArr.forEach((e) => {
     cc.deleteStage(e)
   })
 }

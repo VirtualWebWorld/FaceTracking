@@ -30,6 +30,16 @@ export default class CameraCanvas {
     this.stage.removeChild(g)
   }
 
+  createCircle (x, y, r, color) {
+    const g = new PIXI.Graphics()
+    g.lineStyle(0)
+    g.beginFill(color, 1)
+    g.drawCircle(x, y, r)
+    g.endFill()
+    this.addStage(g)
+    return g
+  }
+
   animate () {
     this.renderer.render(this.stage)
   }
