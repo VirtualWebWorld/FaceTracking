@@ -10,8 +10,28 @@
 
 <body>
   <div id="main">
-    <canvas id="output" />
-    <video id="video" class="video" />
+    <video id="video" class="video unvisible"></video>
+    <div id="pixiview" class="pixi ib"></div>
+    <div class="ib">
+      <div>lips</div>
+      <div>X:<span id="ulipsXPosition"></span></div>
+      <div>Y:<span id="ulipsYPosition"></span></div>
+      <div>X:<span id="llipsXPosition"></span></div>
+      <div>Y:<span id="llipsYPosition"></span></div>
+      <div>rEye</div>
+      <div>X:<span id="urEyeXPosition"></span></div>
+      <div>Y:<span id="urEyeYPosition"></span></div>
+      <div>X:<span id="lrEyeXPosition"></span></div>
+      <div>Y:<span id="lrEyeYPosition"></span></div>
+      <div>lEye</div>
+      <div>X:<span id="ulEyeXPosition"></span></div>
+      <div>Y:<span id="ulEyeYPosition"></span></div>
+      <div>X:<span id="llEyeXPosition"></span></div>
+      <div>Y:<span id="llEyeYPosition"></span></div>
+    </div>
+    <!-- <div id="threejs_canvas" class="ib"></div> -->
+    <div id="vrmCanvas" class="vrm ib"></div>
+    <!-- <canvas id="model_canvas" class="unvisible"></canvas> -->
   </div>
   <script src="./js/index.js"></script>
 </body>

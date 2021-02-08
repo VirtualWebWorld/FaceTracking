@@ -1,11 +1,23 @@
 body {
-	margin: 0;
-	overflow: hidden;
+  margin: 0;
+  overflow: hidden;
 }
 
 .video {
-	transform: scaleX(-1);
-	visibility: hidden;
-	width: auto;
-	height: auto;
+  transform: scale(-1, 1);
+  // display: none;
+}
+
+.pixi {
+  &>canvas {
+    transform: scale(-1, 1);
+  }
+}
+
+.ib{
+  display: inline-block;
+}
+
+.unvisible {
+  display: none;
 }
