@@ -134,15 +134,30 @@ export default class FaceVRM {
     document.getElementById('urEyeYPosition').innerHTML = an.rightEyeUpper0[3][1]
     document.getElementById('lrEyeXPosition').innerHTML = an.rightEyeLower0[6][0]
     document.getElementById('lrEyeYPosition').innerHTML = an.rightEyeLower0[6][1]
-    let lipRatio = ((an.lipsLowerInner[6][1] - an.lipsUpperInner[6][1]) - 2) / 20
+    this.lipMove(an)
+    this.rightEyeMove(an)
+    this.leftEyeMove(an)
+  }
+
+  lipMove (an) {
+    const lipWidth = an.lipsLowerInner[6][1] - an.lipsUpperInner[6][1]
+    let lipRatio = (lipWidth - 2) / 20
     lipRatio = (lipRatio < 0) ? 0 : (lipRatio > 1 ? 1 : lipRatio)
-    let lEyeRatio = 1 - ((an.leftEyeLower0[6][1] - an.leftEyeUpper0[3][1]) - 2) / 3
-    lEyeRatio = (lEyeRatio < 0) ? 0 : (lEyeRatio > 1 ? 1 : lEyeRatio)
-    let rEyeRatio = 1 - ((an.rightEyeLower0[6][1] - an.rightEyeUpper0[3][1]) - 2) / 3
-    rEyeRatio = (rEyeRatio < 0) ? 0 : (rEyeRatio > 1 ? 1 : rEyeRatio)
     this.currentVRM.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.A, lipRatio)
-    this.currentVRM.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.BlinkL, lEyeRatio)
+  }
+
+  rightEyeMove (an) {
+    const rEyeWidth = an.rightEyeLower0[6][1] - an.rightEyeUpper0[3][1]
+    let rEyeRatio = 1 - (rEyeWidth - 2) / 3
+    rEyeRatio = (rEyeRatio < 0) ? 0 : (rEyeRatio > 1 ? 1 : rEyeRatio)
     this.currentVRM.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.BlinkR, rEyeRatio)
+  }
+
+  leftEyeMove (an) {
+    const lEyeWidth = an.leftEyeLower0[6][1] - an.leftEyeUpper0[3][1]
+    let lEyeRatio = 1 - (lEyeWidth - 2) / 3
+    lEyeRatio = (lEyeRatio < 0) ? 0 : (lEyeRatio > 1 ? 1 : lEyeRatio)
+    this.currentVRM.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.BlinkL, lEyeRatio)
   }
 
   animate (prediction) {
