@@ -1,8 +1,7 @@
 import * as PIXI from 'pixi.js'
 import '../css/style.scss'
 
-import '@tensorflow/tfjs'
-import '@tensorflow/tfjs-backend-wasm'
+import * as tf from '@tensorflow/tfjs'
 import * as FLD from '@tensorflow-models/face-landmarks-detection'
 import Stats from 'stats.js'
 
@@ -13,6 +12,9 @@ import Camera from './camera'
 import CameraCanvas from './cameracanvas'
 // import FaceMesh from './facemesh'
 import FaceVRM from './facevrm'
+// import '@tensorflow/tfjs-backend-wasm'
+// require('@tensorflow/tfjs-backend-wasm')
+require('@tensorflow/tfjs-backend-webgl')
 
 const g = []
 const ccArr = []
@@ -23,7 +25,9 @@ let model,
   stats,
   fv
   // fm
-(async function main () {
+tf.setBackend('webgl').then(() => main())
+
+async function main () {
   video = await Camera()
 
   model = await FLD.load(FLD.SupportedPackages.mediapipeFacemesh, {
@@ -40,7 +44,7 @@ let model,
   // await fm.setUp(model)
 
   renderPrediction()
-})()
+}
 
 async function renderPrediction () {
   stats.begin()
