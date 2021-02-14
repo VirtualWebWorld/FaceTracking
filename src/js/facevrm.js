@@ -73,7 +73,10 @@ export default class FaceVRM {
     )
   }
 
-  headPoseEstimation (faces, rightEye, leftEye) {
+  headPoseEstimation (an) {
+    const faces = an.silhouette
+    const rightEye = an.rightEyeLower1[8]
+    const leftEye = an.leftEyeLower1[8]
     const rotate = tf.tidy(() => {
       const fecePoints = tf.tensor(faces)
       const eye1 = tf.tensor1d(rightEye)
@@ -134,23 +137,53 @@ export default class FaceVRM {
     document.getElementById('urEyeYPosition').innerHTML = an.rightEyeUpper0[3][1]
     document.getElementById('lrEyeXPosition').innerHTML = an.rightEyeLower0[6][0]
     document.getElementById('lrEyeYPosition').innerHTML = an.rightEyeLower0[6][1]
-    let lipRatio = ((an.lipsLowerInner[6][1] - an.lipsUpperInner[6][1]) - 2) / 20
+    this.lipMove(an)
+    this.rightEyeMove(an)
+    this.leftEyeMove(an)
+  }
+
+  lipMove (an) {
+    const aLip = this.euclideanDist(an.lipsUpperInner[6], an.lipsLowerInner[6])
+    const bLip = this.euclideanDist(an.lipsLowerInner[0], an.lipsLowerInner[10])
+    const lipWidth = aLip / (2 * bLip)
+    let lipRatio = this.numComplement(lipWidth, 0.05, 0.1)
     lipRatio = (lipRatio < 0) ? 0 : (lipRatio > 1 ? 1 : lipRatio)
-    let lEyeRatio = 1 - ((an.leftEyeLower0[6][1] - an.leftEyeUpper0[3][1]) - 2) / 3
-    lEyeRatio = (lEyeRatio < 0) ? 0 : (lEyeRatio > 1 ? 1 : lEyeRatio)
-    let rEyeRatio = 1 - ((an.rightEyeLower0[6][1] - an.rightEyeUpper0[3][1]) - 2) / 3
-    rEyeRatio = (rEyeRatio < 0) ? 0 : (rEyeRatio > 1 ? 1 : rEyeRatio)
+
     this.currentVRM.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.A, lipRatio)
-    this.currentVRM.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.BlinkL, lEyeRatio)
+  }
+
+  rightEyeMove (an) {
+    const aEyeR = this.euclideanDist(an.rightEyeUpper0[3], an.rightEyeLower0[4])
+    const bEyeR = this.euclideanDist(an.rightEyeLower0[0], an.rightEyeLower0[8])
+    const rEyeWidth = aEyeR / (2 * bEyeR)
+    let rEyeRatio = 1 - this.numComplement(rEyeWidth, 0.08, 0.12)
+    rEyeRatio = (rEyeRatio < 0) ? 0 : (rEyeRatio > 1 ? 1 : rEyeRatio)
     this.currentVRM.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.BlinkR, rEyeRatio)
+  }
+
+  leftEyeMove (an) {
+    const aEyeL = this.euclideanDist(an.leftEyeUpper0[3], an.leftEyeLower0[4])
+    const bEyeL = this.euclideanDist(an.leftEyeLower0[0], an.leftEyeLower0[8])
+    const lEyeWidth = aEyeL / (2 * bEyeL)
+    let lEyeRatio = 1 - this.numComplement(lEyeWidth, 0.08, 0.12)
+    lEyeRatio = (lEyeRatio < 0) ? 0 : (lEyeRatio > 1 ? 1 : lEyeRatio)
+    this.currentVRM.blendShapeProxy.setValue(VRMSchema.BlendShapePresetName.BlinkL, lEyeRatio)
+  }
+
+  numComplement (num, min, max) {
+    return (num - min) / (max - min)
+  }
+
+  euclideanDist (point1, point2) {
+    const [x1, y1] = point1
+    const [x2, y2] = point2
+    return Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2))
   }
 
   animate (prediction) {
     const an = prediction.annotations
-    const rightEyeLower1 = an.rightEyeLower1[8]
-    const leftEyeLower1 = an.leftEyeLower1[8]
     if (this.modelLoadFlag) {
-      this.headPoseEstimation(an.silhouette, rightEyeLower1, leftEyeLower1)
+      this.headPoseEstimation(an)
       this.faceMove(an)
       this.currentVRM.update(this.clock.getDelta())
     }
